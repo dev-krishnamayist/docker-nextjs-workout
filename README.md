@@ -1,196 +1,321 @@
-# Next.js Docker Example - Standalone Mode
+# 🐳 Docker Next.js Sample Project
 
-A production-ready example demonstrating how to Dockerize Next.js applications using **standalone mode**. This example showcases best practices for containerizing Next.js apps with Docker.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.1.4-000000.svg)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.1.1-61DAFB.svg)](https://reactjs.org/)
+[![React](https://img.shields.io/badge/React-19.1.1-61DAFB.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue.svg)](https://www.typescriptlang.org/)
 
-## Features
+A comprehensive demonstration of containerizing a modern **Next.js** application using Docker for both development and production workflows. This project showcases industry best practices for front-end containerization, including standalone and static-export builds, development with live sync, and optimized production delivery.
 
-- Multi-stage Docker build for optimal image size
-- Next.js standalone mode for minimal production builds
-- Security best practices (non-root user)
-- Slim Linux base image for optimal compatibility and smaller size
-- BuildKit cache mounts for faster builds
-- Production-ready configuration
+Part of the official **Docker Next.js** sample guide.
 
-## Prerequisites
+---
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [Node.js 20+](https://nodejs.org/)
+## ✨ Features
 
-## Quick Start with Docker
+- **🔥 Modern Next.js** with App Router and TypeScript
+- **⚡ Standalone & static export** — Node server or static files (Nginx / serve)
+- **🎨 Tailwind CSS** for utility-first styling
+- **🐳 Multi-stage Docker builds** for optimized production images
+- **🔧 Development & production** Docker configurations with Compose Watch
+- **🧪 Testing** with Vitest and Testing Library
+- **📦 Docker Compose** for easy orchestration
+- **☸️ Kubernetes** deployment configuration
+- **🔒 Security-focused** (non-root user, minimal base images)
+- **📋 ESLint** for code quality
+- **🤖 CI/CD** with GitHub Actions (see `.github/workflows`)
 
-### Using Docker Compose
+---
 
-The `compose.yml` includes both Node.js and Bun configurations. Run one service at a time to avoid port conflicts.
+## 🛠️ Tech Stack
 
-**Node.js:**
+| Layer             | Technologies                               |
+| ----------------- | ------------------------------------------ |
+| **Framework**     | Next.js 16 (App Router), React 19, TypeScript |
+| **Styling**       | Tailwind CSS v4                            |
+| **Testing**       | Vitest, React Testing Library              |
+| **Container**     | Docker, Docker Compose                     |
+| **Orchestration** | Kubernetes (optional)                      |
+| **Web Server**    | Nginx (static export), Node (standalone)   |
+
+---
+
+## 📋 Prerequisites
+
+- **Docker** (v20.10+)
+- **Docker Compose** (v2.0+)
+- **Node.js** (v24+) — for local development
+- **npm** or **yarn** or **pnpm** — for local development
+
+---
+
+## 🚀 Quick Start
+
+### Using Docker (Recommended)
+
+**Clone the repository**
 
 ```bash
-# Run with Node.js
-docker compose up nextjs-standalone --build
+git clone https://github.com/kristiyan-velkov/docker-nextjs-sample.git
+cd docker-nextjs-sample
 ```
 
-**Bun:**
+**Development with Docker Compose**
 
 ```bash
-# OR run with Bun
-docker compose up nextjs-standalone-with-bun --build
+docker compose up nextjs-dev --build
 ```
 
-**Stop the application:**
+Access the app at **http://localhost:3000**
+
+**Production (standalone)**
 
 ```bash
-docker compose down
+docker compose up nextjs-prod-standalone --build
 ```
 
-### Using Docker Build
+Access at **http://localhost:3000**
 
-**Node.js:**
+**Production (static export + Nginx)**
 
 ```bash
-# Build the image
-docker build -t nextjs-standalone-image .
-
-# Run the container
-docker run -p 3000:3000 nextjs-standalone-image
+docker compose up nextjs-export --build
 ```
 
-**Bun:**
+Access at **http://localhost:8080**
+
+> **Note:** Only one service using port 8080 (nextjs-export, nextjs-prod-static-nginx, or nextjs-prod-static-serve) should run at a time.
+
+### Local Development
+
+**Install dependencies**
 
 ```bash
-# Build the image
-docker build -f Dockerfile.bun -t nextjs-standalone-bun-image .
-
-# Run the container
-docker run -p 3000:3000 nextjs-standalone-bun-image
+pnpm install
+# or: npm install | yarn install
 ```
 
-**Open your browser:** Navigate to [http://localhost:3000](http://localhost:3000)
+**Start development server**
 
-### In existing projects
-
-To add Docker support to your existing Next.js project:
-
-1. Copy the [`Dockerfile`](https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile) (or [`Dockerfile.bun`](https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile.bun) for Bun) to your project root.
-2. Copy the [`.dockerignore`](https://github.com/vercel/next.js/blob/canary/examples/with-docker/.dockerignore) to your project root.
-3. Add the following to your `next.config.js` (or `next.config.ts`):
-
-```js
-// next.config.js
-module.exports = {
-  output: "standalone",
-};
+```bash
+pnpm dev
 ```
 
-This will build the project as a standalone app inside the Docker image.
+**Run tests**
 
-## Project Structure
-
-```
-nextjs-docker/
-├── app/                    # Next.js App Router directory
-│   ├── layout.tsx          # Root layout with metadata
-│   ├── page.tsx            # Home page with example content
-│   └── globals.css         # Global styles with Tailwind CSS v4
-├── public/                 # Static assets
-│   └── next.svg            # Next.js logo
-├── Dockerfile              # Multi-stage Docker configuration (Node.js)
-├── Dockerfile.bun          # Multi-stage Docker configuration (Bun)
-├── compose.yml             # Docker Compose configuration (Node.js & Bun services)
-├── next.config.ts          # Next.js configuration (standalone mode)
-├── postcss.config.js       # PostCSS configuration for Tailwind CSS
-├── tsconfig.json           # TypeScript configuration
-├── package.json            # Dependencies and scripts
-└── README.md               # This file
+```bash
+pnpm run test:run
 ```
 
-## Configuration
+**Build for production**
 
-### Next.js Standalone Mode
-
-The `next.config.ts` file is configured with `output: "standalone"`:
-
-```typescript
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  output: "standalone",
-};
-
-export default nextConfig;
+```bash
+pnpm build
 ```
 
-The standalone output mode creates a minimal, self-contained production build optimized for containerized deployments. When enabled, Next.js generates a `.next/standalone` directory containing only the essential files needed to run your application, excluding unnecessary dependencies and files. This results in significantly smaller Docker images and faster container startup times.
+---
 
-Learn more about [Next.js standalone output](https://nextjs.org/docs/pages/api-reference/next-config-js/output#standalone) in the official documentation.
+## 🐳 Docker Commands
 
-### Dockerfile Highlights (Node.js)
+### Development
 
-- **Multi-stage build**: Separates dependency installation (`dependencies`), build (`builder`), and runtime (`runner`) stages
-- **Slim Linux**: Uses `slim` image tag for optimal compatibility and smaller image size
-- **BuildKit cache mounts**: Speeds up builds by caching package manager stores (`/root/.npm`, `/usr/local/share/.cache/yarn`, `/root/.local/share/pnpm/store`). See the Dockerfile for an optional `.next/cache` mount to speed up rebuilds.
-- **Non-root user**: Runs as `node` user for security
-- **Optimized layers**: Leverages Docker layer caching effectively
-- **Standalone output**: Copies only the necessary files from `.next/standalone` and `.next/static`
-- **Writable `.next` directory**: The `.next` directory is created and owned by the `node` user so the server can write prerender cache and optimized images at runtime
-- **Node.js version maintenance**: Uses Node.js 24.13.0-slim (latest LTS at time of writing). Update the `NODE_VERSION` ARG to the latest LTS version for security updates.
+```bash
+# Build development image
+docker build -f Dockerfile.dev -t nextjs-app-dev .
 
-### Dockerfile.bun Highlights (Bun)
+# Run development container
+docker run -p 3000:3000 -v $(pwd):/app nextjs-app-dev
 
-- **Multi-stage build**: Same three-stage pattern optimized for Bun
-- **Official Bun image**: Uses `oven/bun:1` for optimal Bun performance
-- **Non-root user**: Runs as built-in `bun` user for security
-- **Frozen lockfile**: Uses `bun.lock` for reproducible builds
-- **Standalone output**: Same optimized output as the Node.js version, with writable `.next` directory for runtime cache
+# Using Docker Compose (recommended, with watch)
+docker compose watch nextjs-dev
+```
 
-**Why Node.js slim image tag?**: The slim variant provides optimal compatibility with npm packages and native dependencies while maintaining a smaller image size (~226MB). Slim uses glibc (standard Linux), ensuring better compatibility than Alpine's musl libc, which can cause issues with some npm packages. This makes it ideal for public examples where reliability and compatibility are priorities.
+### Production (standalone)
 
-**When to use Alpine?**: Consider using `node:24.11.1-alpine` instead if:
+```bash
+# Build production image
+docker build -t nextjs-sample:latest .
 
-- **Image size is critical**: Alpine images are typically ~100MB smaller than slim variants (~110MB base vs ~226MB)
-- **Your dependencies are compatible**: Your npm packages don't require native binaries that depend on glibc
-- **You've tested thoroughly**: You've verified all your dependencies work correctly with musl libc
-- **Security-focused deployments**: Alpine's minimal attack surface can be beneficial for security-sensitive applications
+# Run production container
+docker run -p 3000:3000 nextjs-sample:latest
+```
 
-To switch to Alpine, simply change the `NODE_VERSION` ARG in the Dockerfile to `24.11.1-alpine`.
+### Production (static export)
 
-> [!IMPORTANT]
-> **Node.js Version Maintenance**: This Dockerfile uses Node.js 24.13.0-slim, which was the latest LTS version at the time of writing. To ensure security and stay up-to-date, regularly check and update the `NODE_VERSION` ARG in the Dockerfile to the latest Node.js LTS version. Check the latest version at [Nodejs official website](https://nodejs.org/) and browse available Node.js images on [Docker Hub](https://hub.docker.com/_/node).
+```bash
+# Build static export + Nginx
+docker build -f Dockerfile.export -t nextjs-export .
+docker run -p 8080:8080 nextjs-export
+```
 
-## Deployment
+### One-off tasks (Compose, profile: tools)
 
-This example can be deployed to any container-based platform:
+```bash
+docker compose --profile tools run --rm nextjs-test
+docker compose --profile tools run --rm nextjs-lint
+```
 
-- Google Cloud Run
-- AWS ECS/Fargate
-- Azure Container Instances
-- DigitalOcean App Platform
-- Any Kubernetes cluster
+---
 
-### Deploying to Google Cloud Run
+## ☸️ Kubernetes Deployment
 
-1. Install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) so you can use `gcloud` on the command line.
-2. Run `gcloud auth login` to log in to your account.
-3. [Create a new project](https://cloud.google.com/run/docs/quickstarts/build-and-deploy) in Google Cloud Run (e.g. `nextjs-docker`). Ensure billing is turned on.
-4. Build your container image using Cloud Build:
-   ```bash
-   gcloud builds submit --tag gcr.io/PROJECT-ID/nextjs-docker --project PROJECT-ID
-   ```
-   This will also enable Cloud Build for your project.
-5. Deploy to Cloud Run:
+Deploy the Next.js standalone app using the provided manifest:
 
-   ```bash
-   gcloud run deploy --image gcr.io/PROJECT-ID/nextjs-docker --project PROJECT-ID --platform managed --allow-unauthenticated
-   ```
+```bash
+# 1. Build the image (must match manifest)
+docker build -t nextjs-sample:latest -f Dockerfile .
 
-   - You will be prompted for the service name: press Enter to accept the default name, `nextjs-docker`.
-   - You will be prompted for [region](https://cloud.google.com/run/docs/quickstarts/build-and-deploy#follow-cloud-run): select the region of your choice, for example `us-central1`.
+# 2. Apply the manifest (requires a running cluster, e.g. Docker Desktop K8s)
+kubectl apply -f nextjs-sample-kubernetes.yaml
+```
 
-## Learn More
+This creates:
 
-- [Next.js Documentation](https://nextjs.org/docs) - Comprehensive Next.js documentation
-- [Next.js Templates](https://vercel.com/templates?framework=next.js) - Browse and deploy Next.js templates
-- [Next.js Examples](https://github.com/vercel/next.js/tree/canary/examples) - Discover boilerplate example projects
-- [Deploy to Vercel](https://vercel.com/new) - Instantly deploy your Next.js site
-- [Learn Docker](https://docs.docker.com/get-started/) - Get started with Docker fundamentals, containerization, and deployment
-- [Docker Documentation](https://docs.docker.com/) - Comprehensive Docker documentation and reference guides
-- [React.js Docker Guide](https://docs.docker.com/language/nodejs/) - Official Docker guide for React.js applications following best practices for containerization
+- **Deployment** (`nextjs-sample`) — 1 replica
+- **Service** (`nextjs-sample-service`) — NodePort **30001**
+
+**Access:** http://localhost:30001 (Docker Desktop) or use `minikube service nextjs-sample-service --url` for minikube.
+
+**Cleanup**
+
+```bash
+kubectl delete -f nextjs-sample-kubernetes.yaml
+```
+
+See [README.Docker.md](README.Docker.md) for detailed Kubernetes steps (Docker Desktop, minikube, kind).
+
+---
+
+## 📁 Project Structure
+
+```
+├── app/                        # Next.js App Router
+│   ├── components/home/        # Home page components
+│   ├── data/                   # Author, resources data
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── globals.css
+├── public/                     # Static assets
+├── Dockerfile                   # Next.js standalone (production)
+├── Dockerfile.dev               # Next.js development
+├── Dockerfile.export            # Next.js static export → Nginx
+├── Dockerfile.nginx             # Next.js static export → Nginx (alt)
+├── Dockerfile.serve             # Next.js static export → Node serve
+├── compose.yaml                 # Docker Compose configuration
+├── nginx.conf                   # Nginx config for static export
+├── nextjs-sample-kubernetes.yaml # Kubernetes deployment
+├── Taskfile.yml                 # Task automation
+└── README.Docker.md             # Docker & Kubernetes guide
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+# Local testing
+pnpm run test:run
+
+# Testing in Docker
+docker compose --profile tools run --rm nextjs-test
+```
+
+---
+
+## 🛡️ Security
+
+This setup follows security best practices:
+
+- **Non-root user** (node / nginx) in production images
+- **Minimal base images** (slim / Alpine where applicable)
+- **Lockfile-based installs** for reproducible builds
+- **Multi-stage builds** to keep final image small
+
+---
+
+## 🔧 Configuration
+
+### Environment Variables
+
+| Variable      | Description         | Default                                        |
+| ------------- | ------------------- | ---------------------------------------------- |
+| `PORT`        | Application port    | 3000                                           |
+| `NODE_ENV`    | Environment mode    | development / production                       |
+| `HOSTNAME`    | Next.js server host | 0.0.0.0                                        |
+| `NEXT_OUTPUT` | Next.js output mode | standalone (or `export` in export Dockerfiles) |
+
+### Docker Compose Override
+
+Create `compose.override.yaml` for local customizations:
+
+```yaml
+services:
+  nextjs-dev:
+    ports:
+      - "3001:3000"
+    environment:
+      - CUSTOM_VAR=value
+```
+
+---
+
+## 📚 Available Scripts
+
+| Command             | Description              |
+| ------------------- | ------------------------ |
+| `pnpm dev`          | Start Next.js dev server |
+| `pnpm build`        | Build for production     |
+| `pnpm start`        | Start production server  |
+| `pnpm lint`         | Run ESLint               |
+| `pnpm run test:run` | Run tests once           |
+| `pnpm test`         | Run Vitest (watch)       |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome. Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Kristiyan Velkov**
+
+- LinkedIn: [kristiyan-velkov](https://www.linkedin.com/in/kristiyan-velkov-763130b3/)
+- Medium: [@kristiyanvelkov](https://medium.com/@kristiyanvelkov)
+- Newsletter: **Front-end World**
+- X: [@krisvelkov](https://x.com/krisvelkov)
+
+---
+
+## ☕ Support
+
+If you find this project helpful, consider supporting:
+
+- [GitHub Sponsors](https://github.com/sponsors/kristiyan-velkov)
+- Buy Me a Coffee
+- Revolut
+
+---
+
+## 🔗 Related Resources
+
+- [Docker Documentation](https://docs.docker.com/)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [Docker Next.js Guide](https://docs.docker.com/language/nodejs/)
