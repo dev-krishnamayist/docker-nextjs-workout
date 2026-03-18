@@ -61,6 +61,7 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
       # 7. Run Vitest tests inside the container
+      # Use same package-manager detection as Dockerfile (no corepack at runtime; node user can't write to /usr/local/bin)
       - name: Run tests
         run: |
           docker run --rm \
@@ -68,7 +69,7 @@ jobs:
             --entrypoint "" \
             -e CI=true \
             ${{ steps.meta.outputs.REPO_NAME }}-dev:latest \
-            sh -c "corepack enable pnpm && pnpm run test:run"
+            sh -c "if [ -f package-lock.json ]; then npm run test:run; elif [ -f yarn.lock ]; then yarn test:run; elif [ -f pnpm-lock.yaml ]; then pnpm run test:run; else npm run test:run; fi"
         env:
           CI: true
           NODE_ENV: test
