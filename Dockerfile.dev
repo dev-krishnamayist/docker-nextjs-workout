@@ -1,0 +1,52 @@
+# ============================================
+# Development Dockerfile for Next.js
+# ============================================
+# IMPORTANT: Node.js version maintenance
+# This Dockerfile uses a pinned Node.js tag for reproducible builds. Regularly validate and update NODE_VERSION for security and compatibility.
+# For supply-chain hardening, you can switch to a hardened base (e.g. Docker Hardened Images / dhi.io) and use the same pattern.
+# See: https://github.com/vercel/next.js/tree/canary/examples/with-docker
+ARG NODE_VERSION=24.14.0-slim
+
+FROM node:${NODE_VERSION} AS dev
+
+# Set working directory
+WORKDIR /app
+
+# Copy package-related files first to leverage Docker's caching mechanism
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+
+# Install project dependencies (frozen lockfile for reproducible installs)
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/usr/local/share/.cache/yarn \
+    --mount=type=cache,target=/root/.local/share/pnpm/store \
+  if [ -f package-lock.json ]; then \
+    npm ci --no-audit --no-fund; \
+  elif [ -f yarn.lock ]; then \
+    corepack enable yarn && yarn install --frozen-lockfile --production=false; \
+  elif [ -f pnpm-lock.yaml ]; then \
+    corepack enable pnpm && pnpm install --frozen-lockfile; \
+  else \
+    echo "No lockfile found." && exit 1; \
+  fi
+
+# Copy the rest of the application source code into the container
+# (Compose Watch will sync changes at runtime; this is the initial state)
+COPY . .
+
+# Ensure file watching works inside Docker (e.g. with Compose Watch or bind mounts)
+ENV WATCHPACK_POLLING=true
+# Bind Next.js dev server to all interfaces
+ENV HOSTNAME="0.0.0.0"
+
+# Change ownership so the node user can write (e.g. .next, caches)
+RUN chown -R node:node /app
+
+# Switch to non-root user for security best practices
+USER node
+
+# Expose the port used by the Next.js development server
+EXPOSE 3000
+
+# Use a default command, can be overridden in compose.yaml
+# Runs the dev script using the same package manager as the install step
+CMD ["sh", "-c", "if [ -f package-lock.json ]; then npm run dev; elif [ -f yarn.lock ]; then yarn dev; elif [ -f pnpm-lock.yaml ]; then pnpm dev; else npm run dev; fi"]
