@@ -9,7 +9,11 @@
 
 A comprehensive demonstration of containerizing a modern **Next.js** application using Docker for both development and production workflows. This project showcases industry best practices for front-end containerization, including standalone and static-export builds, development with live sync, and optimized production delivery.
 
+![Next.js Guide](./public/next-js-guide.png)
+
 Part of the official **Docker Next.js** sample guide.
+
+For full reference, including all Docker files and setup details, switch to the `development` branch.
 
 ---
 
@@ -31,14 +35,14 @@ Part of the official **Docker Next.js** sample guide.
 
 ## 🛠️ Tech Stack
 
-| Layer             | Technologies                               |
-| ----------------- | ------------------------------------------ |
+| Layer             | Technologies                                  |
+| ----------------- | --------------------------------------------- |
 | **Framework**     | Next.js 16 (App Router), React 19, TypeScript |
-| **Styling**       | Tailwind CSS v4                            |
-| **Testing**       | Vitest, React Testing Library              |
-| **Container**     | Docker, Docker Compose                     |
-| **Orchestration** | Kubernetes (optional)                      |
-| **Web Server**    | Nginx (static export), Node (standalone)   |
+| **Styling**       | Tailwind CSS v4                               |
+| **Testing**       | Vitest, React Testing Library                 |
+| **Container**     | Docker, Docker Compose                        |
+| **Orchestration** | Kubernetes (optional)                         |
+| **Web Server**    | Nginx (static export), Node (standalone)      |
 
 ---
 

@@ -11,9 +11,5 @@ module.exports = defineConfig([
   globalIgnores([
     ".next/**",
     "out/**",
-    "build/**",
-    "next-env.d.ts",
-    "node_modules/**",
-    "eslint.config.cjs",
-  ]),
+    "build/**",   ]),
 ]);
