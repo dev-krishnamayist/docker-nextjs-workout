@@ -14,6 +14,7 @@ export default function PageHeader() {
         A production-ready example demonstrating how to Dockerize Next.js
         applications using standalone mode.
       </p>
+      <p className="text-xl font-bold text-blue-600">Using Docker Compose Watch!</p>
     </header>
   );
 }

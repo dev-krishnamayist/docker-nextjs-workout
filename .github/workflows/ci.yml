@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile.dev
+          file: dev.dockerfile
           tags: ${{ steps.meta.outputs.REPO_NAME }}-dev:latest
           load: true
           cache-from: type=local,src=/tmp/.buildx-cache

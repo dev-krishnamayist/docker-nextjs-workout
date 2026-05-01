@@ -1,0 +1,43 @@
+services:
+  nextjs-prod:
+    build:
+      context: .
+      dockerfile: prod.dockerfile
+    image: nextjs-workout:prod
+    container_name: nextks-workoout-prod
+    ports:
+      - "3000:3000"
+  nextjs-dev:
+    build: 
+      context: .
+      dockerfile: dev.dockerfile
+    image: nextjs-workout:dev
+    container_name: nextjs-workout-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - WATCHPACK_POLLING=true
+    develop:
+      watch:
+        - path: .
+          action: sync
+          target: /app
+          ignore:
+            - node_modules/
+            - .next/
+        - path: package.json
+          action: rebuild 
+  nextjs-test:
+    build:
+      context: .
+      dockerfile: dev.dockerfile
+    image: nextjs-workout:dev
+    container_name: nextjs-workout-test
+    command:
+      [
+        "sh",
+        "-c",
+        "if [ -f package-lock.json ]; then npm run test:run 2>/dev/null || npm run test -- --run; elif [ -f yarn.lock ]; then yarn test:run 2>/dev/null || yarn test --run; elif [ -f pnpm-lock.yaml ]; then pnpm run test:run; else npm run test -- --run; fi",
+      ]
+    profiles:
+      - tools
