@@ -7,10 +7,6 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./vitest.setup.ts",
     globals: true,
-    test: {
-    environment: "jsdom",
-    setupFiles: "./src/setupTests.ts",
-    globals: true,
     css: true,
     coverage: {
       provider: "v8",
@@ -38,6 +34,5 @@ export default defineConfig({
         statements: 100,
       },
     },
-  },
-}
+  }
 });

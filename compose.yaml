@@ -4,9 +4,9 @@ services:
       context: .
       dockerfile: prod.dockerfile
     image: nextjs-workout:prod
-    container_name: nextks-workoout-prod
+    container_name: nextjs-workout-prod
     ports:
-      - "3000:3000"
+      - "8080:8080"
   nextjs-dev:
     build: 
       context: .
